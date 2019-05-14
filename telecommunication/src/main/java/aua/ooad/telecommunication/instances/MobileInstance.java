@@ -2,6 +2,7 @@ package aua.ooad.telecommunication.instances;
 
 import aua.ooad.telecommunication.entities.Call;
 import aua.ooad.telecommunication.entities.Customer;
+import aua.ooad.telecommunication.entities.DirectionPrice;
 import aua.ooad.telecommunication.entities.PhoneNumber;
 import aua.ooad.telecommunication.entities.tariffs.MobileTariff;
 
@@ -25,6 +26,18 @@ public class MobileInstance {
     public MobileInstance() {
     }
 
+    public MobileInstance(MobileInstance mi){
+        this.id = mi.id;
+        this.freeInternet = mi.freeInternet;
+        this.freeMinutes = mi.freeMinutes;
+        this.freeSMS = mi.freeSMS;
+        this.activeFrom = mi.activeFrom;
+        this.activeTo = mi.activeTo;
+        this.balance = mi.balance;
+        this.isActive = mi.isActive;
+        this.tariff = mi.tariff;
+        this.number = mi.number;
+    }
     public MobileInstance(MobileTariff mt, Customer customer) {
         id = UUID.randomUUID().toString();
         freeMinutes = mt.getFreeMinutes();
@@ -40,22 +53,135 @@ public class MobileInstance {
     }
 
     public double getTotalPrice(){
-        return 0.0;
+        return tariff.getPrice() + number.getPrice();
     }
 
     public void chargeForTalkedMinutes(Call call){
+        double duration = call.getDuration();
+        String toNumber = call.getToNumber();
+        double remainder = 0;
+        if(freeMinutes > 0 && freeMinutes >= duration){
+            freeMinutes-= duration;
+        } else if(freeMinutes > 0 && freeMinutes < duration){
+            remainder = duration - freeMinutes;
+            freeMinutes = 0;
+        }
+
+        DirectionPrice dp = tariff.getCallPriceForNumber(toNumber);
+
+        if(remainder >0)
+            addToBalance(-dp.getPricePerUnit() * remainder);
 
     }
 
-    public void increaseBalance(double amount){
+    public void addToBalance(double amount){
         this.balance +=amount;
     }
 
-    public void chargeForInternet(int amountOfMB){}
+    public void chargeForInternet(double amountOfMB){
+
+        double remainder = 0;
+        if(freeInternet > 0 && freeInternet >= amountOfMB){
+            freeInternet-= amountOfMB;
+        } else if(freeInternet > 0 && freeInternet < amountOfMB){
+            remainder = amountOfMB - freeInternet;
+            freeInternet = 0;
+        }
+
+        if(remainder >0) {
+            double total =  tariff.getInternetPrice() * remainder;
+            addToBalance(-total);
+        }
+    }
 
     public void chargeForSMS(int toNumber){}
 
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public int getFreeMinutes() {
+        return freeMinutes;
+    }
+
+    public void setFreeMinutes(int freeMinutes) {
+        this.freeMinutes = freeMinutes;
+    }
+
+    public int getFreeInternet() {
+        return freeInternet;
+    }
+
+    public void setFreeInternet(int freeInternet) {
+        this.freeInternet = freeInternet;
+    }
+
+    public int getFreeSMS() {
+        return freeSMS;
+    }
+
+    public void setFreeSMS(int freeSMS) {
+        this.freeSMS = freeSMS;
+    }
+
+    public Date getActiveFrom() {
+        return activeFrom;
+    }
+
+    public void setActiveFrom(Date activeFrom) {
+        this.activeFrom = activeFrom;
+    }
+
+    public Date getActiveTo() {
+        return activeTo;
+    }
+
+    public void setActiveTo(Date activeTo) {
+        this.activeTo = activeTo;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public MobileTariff getTariff() {
+        return tariff;
+    }
+
+    public void setTariff(MobileTariff tariff) {
+        this.tariff = tariff;
+    }
+
+    public PhoneNumber getNumber() {
+        return number;
+    }
+
+    public void setNumber(PhoneNumber number) {
+        this.number = number;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }

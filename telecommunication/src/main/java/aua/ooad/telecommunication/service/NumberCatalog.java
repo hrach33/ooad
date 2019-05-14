@@ -75,4 +75,12 @@ public class NumberCatalog {
     public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
+
+    public PhoneNumber findNumber(String number){
+        for(PhoneNumber pn: phoneNumbers){
+            if(pn.getNumber().equals(number))
+                return pn;
+        }
+        return null;
+    }
 }

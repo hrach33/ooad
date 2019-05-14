@@ -40,7 +40,9 @@ public class Customer {
         mobileInstances.add(mi);
     }
 
-    public void addPackageInstance(){}
+    public void addPackageInstance(PackageInstance pi){
+        packageInstances.add(pi);
+    }
 
 
     public String getId() {
@@ -100,7 +102,11 @@ public class Customer {
     }
 
     public List<MobileInstance> getMobileInstances() {
-        return mobileInstances;
+        List<MobileInstance> copyList = new ArrayList<>();
+        for (MobileInstance mi: mobileInstances){
+            copyList.add(new MobileInstance(mi));
+        }
+        return copyList;
     }
 
     public void setMobileInstances(List<MobileInstance> mobileInstances) {

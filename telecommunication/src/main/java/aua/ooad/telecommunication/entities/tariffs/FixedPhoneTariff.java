@@ -15,4 +15,21 @@ public class FixedPhoneTariff extends Tariff{
     public void setFreeMinutes(int freeMinutes) {
         this.freeMinutes = freeMinutes;
     }
+
+    public DirectionPrice getCallPriceForNumber(String number) {
+        String extension = number.substring(0, 2);
+        for (DirectionPrice dp : directionPrices) {
+            if (dp.getOperationType().equals("call") && dp.getToExtension().equals(extension))
+                return dp;
+        }
+        return null;
+    }
+
+    public List<DirectionPrice> getDirectionPrices() {
+        return directionPrices;
+    }
+
+    public void setDirectionPrices(List<DirectionPrice> directionPrices) {
+        this.directionPrices = directionPrices;
+    }
 }
