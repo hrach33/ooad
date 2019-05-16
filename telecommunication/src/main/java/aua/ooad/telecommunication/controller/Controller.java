@@ -1,9 +1,7 @@
 package aua.ooad.telecommunication.controller;
 
-import aua.ooad.telecommunication.entities.Call;
-import aua.ooad.telecommunication.entities.Customer;
+import aua.ooad.telecommunication.entities.*;
 import aua.ooad.telecommunication.entities.Package;
-import aua.ooad.telecommunication.entities.PhoneNumber;
 import aua.ooad.telecommunication.entities.tariffs.MobileTariff;
 import aua.ooad.telecommunication.entities.tariffs.Tariff;
 import aua.ooad.telecommunication.instances.MobileInstance;
@@ -233,6 +231,7 @@ public class Controller {
             PackageInstance pi = packageService.getPackageInstance(endCallRequest.fromNumber);
             pi.chargeForTalkedMinutes(c);
         }
+        archive.addCall(c);
     }
 
     private static class MakePaymentRequest{
@@ -267,6 +266,16 @@ public class Controller {
 
     }
 
+    private static class UseSMSRequest{
+        public String fromNumber;
+        public String toNumber;
+    }
+
+    @PostMapping("/useSMS")
+    public void useSMS(@RequestBody UseSMSRequest useSMSRequest){
+        mobileService.useSMS(useSMSRequest.fromNumber, useSMSRequest.toNumber);
+
+    }
 
     private static class GetInstancesResponse{
         public List<PackageInstance> packageInstances;
@@ -286,6 +295,20 @@ public class Controller {
         return getInstancesResponse;
 
     }
+
+
+    @GetMapping("/getPayments/{customerId}")
+    public List<Payment> getPayments(@PathVariable String customerId, HttpServletRequest httpServletRequest) {
+        List<Payment> res = archive.getPayments(customerId);
+        return res;
+    }
+
+    @GetMapping("/getCalls/{customerId}")
+    public List<Call> getCalls(@PathVariable String customerId, HttpServletRequest httpServletRequest) {
+        List<Call> res = archive.getCalls(customerId);
+        return res;
+    }
+
     private String getNumberType(String number) {
         if (number.startsWith("060") || number.startsWith("010"))
             return "fixed";

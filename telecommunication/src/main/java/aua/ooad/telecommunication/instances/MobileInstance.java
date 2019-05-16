@@ -65,6 +65,8 @@ public class MobileInstance {
         } else if(freeMinutes > 0 && freeMinutes < duration){
             remainder = duration - freeMinutes;
             freeMinutes = 0;
+        } else{
+            remainder = duration;
         }
 
         DirectionPrice dp = tariff.getCallPriceForNumber(toNumber);
@@ -86,6 +88,8 @@ public class MobileInstance {
         } else if(freeInternet > 0 && freeInternet < amountOfMB){
             remainder = amountOfMB - freeInternet;
             freeInternet = 0;
+        } else {
+            remainder = amountOfMB;
         }
 
         if(remainder >0) {
@@ -94,7 +98,14 @@ public class MobileInstance {
         }
     }
 
-    public void chargeForSMS(int toNumber){}
+    public void chargeForSMS(String toNumber){
+        if(freeSMS > 0){
+            freeSMS--;
+        } else {
+            DirectionPrice dp = tariff.getSmsPriceForNumber(toNumber);
+            addToBalance(-dp.getPricePerUnit());
+        }
+    }
 
 
     public String getId() {

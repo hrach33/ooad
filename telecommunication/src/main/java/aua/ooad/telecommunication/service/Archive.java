@@ -65,5 +65,26 @@ public class Archive {
 
         payments.add(p);
     }
-    public void addCall(Call call){}
+    public void addCall(Call call){
+        calls.add(call);
+    }
+
+
+    public List<Payment> getPayments(String customerId){
+        List<Payment> res = new ArrayList<>();
+        for(Payment p : payments){
+            if(p.getCustomerId().equals(customerId))
+                res.add(p);
+        }
+        return res;
+    }
+
+    public List<Call> getCalls(String customerId){
+        List<Call> res = new ArrayList<>();
+        for(Call c : calls){
+            if(c.getCustomerId().equals(customerId))
+                res.add(c);
+        }
+        return res;
+    }
 }

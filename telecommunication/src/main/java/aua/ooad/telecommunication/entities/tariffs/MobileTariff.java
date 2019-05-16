@@ -20,6 +20,15 @@ public class MobileTariff extends Tariff {
         return null;
     }
 
+    public DirectionPrice getSmsPriceForNumber(String number) {
+        String extension = number.substring(0, 3);
+        for (DirectionPrice dp : directionPrices) {
+            if (dp.getOperationType().equals("sms") && dp.getToExtension().equals(extension))
+                return dp;
+        }
+        return null;
+    }
+
     public double getInternetPrice() {
         for (DirectionPrice dp : directionPrices) {
             if (dp.getOperationType().equals("internet"))

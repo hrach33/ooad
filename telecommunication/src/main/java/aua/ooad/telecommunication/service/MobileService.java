@@ -31,12 +31,16 @@ public class MobileService {
         DirectionPrice dp3 = new DirectionPrice("060", 15, "call");
         DirectionPrice dp4 = new DirectionPrice("010", 15, "call");
         DirectionPrice dp5 = new DirectionPrice(null, 15, "internet");
+        DirectionPrice dp6 = new DirectionPrice("098", 5, "sms");
+        DirectionPrice dp7 = new DirectionPrice("055", 10, "sms");
 
         directionPrices.add(dp1);
         directionPrices.add(dp2);
         directionPrices.add(dp3);
         directionPrices.add(dp4);
         directionPrices.add(dp5);
+        directionPrices.add(dp6);
+        directionPrices.add(dp7);
 
         MobileTariff t1 = new MobileTariff();
         t1.setId(1);
@@ -109,7 +113,10 @@ public class MobileService {
         mi.chargeForInternet(amountOfMb);
     }
 
-    public void useSMS() {
+    public void useSMS(String fromNumber, String toNumber) {
+        MobileInstance mi = getMobileInstance(fromNumber);
+        mi.chargeForSMS(toNumber);
+
     }
 
     public PhoneNumber getPhoneNumber(String number){
